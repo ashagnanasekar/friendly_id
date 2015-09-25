@@ -127,6 +127,10 @@ method.
         relation = relation.where(:scope => serialized_scope)
       end
       relation.delete_all
+      
+      previous_slugs = slugs.order("created_at DESC")
+      previous_slugs[-1].destroy if previous_slugs.length == 3
+
       slugs.create! do |record|
         record.slug = friendly_id
         record.scope = serialized_scope if friendly_id_config.uses?(:scoped)
